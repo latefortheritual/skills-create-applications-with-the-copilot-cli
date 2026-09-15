@@ -1,5 +1,5 @@
 // Calculator supports the following operations:
-// addition, subtraction, multiplication, and division.
+// addition, subtraction, multiplication, division, modulo, power, and square root.
 
 function normalizeNumber(value, label) {
   const number = Number(value);
@@ -34,6 +34,34 @@ function division(a, b) {
   return left / right;
 }
 
+function modulo(a, b) {
+  const left = normalizeNumber(a, 'modulo operand a');
+  const right = normalizeNumber(b, 'modulo operand b');
+
+  if (right === 0) {
+    throw new Error('Modulo by zero is not allowed.');
+  }
+
+  return left % right;
+}
+
+function power(base, exponent) {
+  return Math.pow(
+    normalizeNumber(base, 'power base'),
+    normalizeNumber(exponent, 'power exponent')
+  );
+}
+
+function squareRoot(n) {
+  const number = normalizeNumber(n, 'square root operand');
+
+  if (number < 0) {
+    throw new Error('Square root of a negative number is not allowed.');
+  }
+
+  return Math.sqrt(number);
+}
+
 function calculate(operation, ...args) {
   const normalizedOperation = operation && String(operation).trim().toLowerCase();
 
@@ -54,9 +82,21 @@ function calculate(operation, ...args) {
     case 'divide':
     case '/':
       return division(args[0], args[1]);
+    case 'modulo':
+    case 'mod':
+    case '%':
+      return modulo(args[0], args[1]);
+    case 'power':
+    case 'exponentiation':
+    case '^':
+      return power(args[0], args[1]);
+    case 'squareroot':
+    case 'square root':
+    case 'sqrt':
+      return squareRoot(args[0]);
     default:
       throw new Error(
-        `Unsupported operation: ${operation}. Supported operations: addition, subtraction, multiplication, division.`
+        `Unsupported operation: ${operation}. Supported operations: addition, subtraction, multiplication, division, modulo, power, square root.`
       );
   }
 }
@@ -67,7 +107,9 @@ if (require.main === module) {
   try {
     if (!operation) {
       console.error('Usage: node src/calculator.js <operation> <value1> <value2>');
-      console.error('Supported operations: addition, subtraction, multiplication, division');
+      console.error(
+        'Supported operations: addition, subtraction, multiplication, division, modulo, power, square root'
+      );
       process.exit(1);
     }
 
@@ -84,5 +126,8 @@ module.exports = {
   subtraction,
   multiplication,
   division,
+  modulo,
+  power,
+  squareRoot,
   calculate,
 };
